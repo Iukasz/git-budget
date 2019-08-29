@@ -1,18 +1,4 @@
-<?php
-// nawiązujemy połączenie
-$link = mysqli_connect("adresHosta", "uzytkownik", "haslo", "nazwaBazy");
- 
-// sprawdzamy efekt połączenia
-if (mysqli_connect_errno()) {
-  printf("Nie udało się połączyć: %s", mysqli_connect_error());
-  exit();
-}
- 
-// przeprowadzamy wszystkie operacje
- 
-// zamykamy połączenie z bazą
-mysqli_close($link);
-?>
+
 
 <form method="POST" action="/register.php">
    <fieldset>
