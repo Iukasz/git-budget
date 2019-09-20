@@ -1,3 +1,10 @@
+<?php
+session_start();
+
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="pl-PL">
 <head>
@@ -9,7 +16,7 @@
     <meta name="keywords" content="Colorlib Templates">
 
     <!-- Title Page-->
-    <title>Logowanie</title>
+    <title>Budżet domowy</title>
 
     <!-- Icons font CSS-->
     <link href="vendor/mdi-font/css/material-design-iconic-font.min.css" rel="stylesheet" media="all">
@@ -31,30 +38,26 @@
         <div class="card card-1">
             <div class="card-heading"></div>
             <div class="card-body">
-                <h2 class="title">Logowanie</h2>
-                <form method="POST" action="/loginverify.php">
-
-                    <form method="POST">
-                        <div class="input-group">
-                            <input class="input--style-1" type="email" placeholder="E-mail" name="email">
-                        </div>
-                        <form method="POST">
-                            <div class="input-group">
-                                <input class="input--style-1" type="password" placeholder="Hasło" name="password">
-                            </div>
 
 
+               <?php
+
+               if (isset($_SESSION["username"])){
+                   echo 'Jesteś zalogowany jako ' .$_SESSION["username"];
+               }
+               else{
+                   header("location:login.php");
+               }
+
+               ?>
+
+            <a href="logout.php">Wyloguj</a>
 
             </div>
         </div>
 
 
 
-        <div class="p-t-20">
-            <button class="btn btn--radius btn--green" type="submit">Zaloguj</button>
-        </div>
-        </form>
-        </form>
 
     </div>
 </div>

@@ -1,3 +1,66 @@
+<?php
+$password=$_POST['password'];
+$hashPassword = sha1($password);
+$email = $_POST['email'];
+
+
+function register()
+{
+    global $email;
+    global $hashPassword;
+    include_once 'dboConfig.php';
+    try {
+        $database = new Connection();
+        $db = $database->openConnection();
+
+        $stm = $db->prepare("INSERT INTO tusers (email,password) VALUES ( :email, :password)");
+        $stm->execute(array(':email' => $email, ':password' => $hashPassword));
+
+    } catch (PDOException $e) {
+        echo "Nastąpił błąd w połączeniu z bazą danych. " . $e->getMessage();
+    }
+
+
+}
+
+function checkEmail(){
+    global $email;
+    include_once 'dboConfig.php';
+
+    try {
+        $database = new Connection();
+        $db = $database->openConnection();
+        $stm = $db->prepare("SELECT * FROM tusers WHERE email=:email");
+        $stm->execute(array(':email' => $email));
+        $count=$stm->rowCount();
+
+
+    } catch (PDOException $e) {
+        echo "Nastąpił błąd w połączeniu z bazą danych. " . $e->getMessage();
+    }
+    return $count;
+}
+
+if ($password == null || $email==null){
+    $message='Pola nie mogą być puste.';
+
+
+
+}
+elseif (checkEmail()>=1){
+    $message='Konto o podanym adresie zostało już założone.';
+}
+else{
+    register();
+    $message='Zarejestrowano';
+
+}
+
+
+
+
+?>
+
 <!DOCTYPE html>
 <html lang="pl-PL">
 <head>
@@ -9,7 +72,7 @@
     <meta name="keywords" content="Colorlib Templates">
 
     <!-- Title Page-->
-    <title>Logowanie</title>
+    <title>Załóz konto </title>
 
     <!-- Icons font CSS-->
     <link href="vendor/mdi-font/css/material-design-iconic-font.min.css" rel="stylesheet" media="all">
@@ -31,33 +94,25 @@
         <div class="card card-1">
             <div class="card-heading"></div>
             <div class="card-body">
-                <h2 class="title">Logowanie</h2>
-                <form method="POST" action="/loginverify.php">
-
-                    <form method="POST">
-                        <div class="input-group">
-                            <input class="input--style-1" type="email" placeholder="E-mail" name="email">
-                        </div>
-                        <form method="POST">
-                            <div class="input-group">
-                                <input class="input--style-1" type="password" placeholder="Hasło" name="password">
-                            </div>
+                <h2 class="title"><?php echo $message ?></h2>
 
 
 
             </div>
+
         </div>
 
 
 
+        </form>
+        </form>
         <div class="p-t-20">
-            <button class="btn btn--radius btn--green" type="submit">Zaloguj</button>
+            <button class="btn btn--radius btn--green" type="button" onclick="window.location.href='login.php'">Zaloguj</button>
         </div>
-        </form>
-        </form>
-
     </div>
+
 </div>
+
 </div>
 </div>
 
@@ -75,3 +130,5 @@
 
 </html>
 <!-- end document-->
+
+

@@ -1,3 +1,35 @@
+<?php
+include_once 'dboConfig.php';
+$password=$_POST['password'];
+$hashPassword = sha1($password);
+$email = $_POST['email'];
+session_start();
+
+try {
+    $database = new Connection();
+    $db = $database->openConnection();
+
+    $stm = $db->prepare("SELECT * FROM tusers WHERE email=:email AND password=:password");
+    $stm->execute(array(':email' => $email, ':password' => $hashPassword));
+    $count=$stm->rowCount();
+    if ($count>0){
+        $_SESSION["username"]=$_POST['email'];
+        header("location:main.php");
+    }
+    else{
+        $message="Błędny login lub hasło";
+    }
+} catch (PDOException $e) {
+    echo "Nastąpił błąd w połączeniu z bazą danych. " . $e->getMessage();
+}
+
+
+
+?>
+
+
+
+
 <!DOCTYPE html>
 <html lang="pl-PL">
 <head>
@@ -9,7 +41,7 @@
     <meta name="keywords" content="Colorlib Templates">
 
     <!-- Title Page-->
-    <title>Logowanie</title>
+    <title>Budżet domowy</title>
 
     <!-- Icons font CSS-->
     <link href="vendor/mdi-font/css/material-design-iconic-font.min.css" rel="stylesheet" media="all">
@@ -31,17 +63,11 @@
         <div class="card card-1">
             <div class="card-heading"></div>
             <div class="card-body">
-                <h2 class="title">Logowanie</h2>
-                <form method="POST" action="/loginverify.php">
 
-                    <form method="POST">
-                        <div class="input-group">
-                            <input class="input--style-1" type="email" placeholder="E-mail" name="email">
-                        </div>
-                        <form method="POST">
-                            <div class="input-group">
-                                <input class="input--style-1" type="password" placeholder="Hasło" name="password">
-                            </div>
+
+                    <?php
+                    echo $message;
+                    ?>
 
 
 
@@ -50,11 +76,6 @@
 
 
 
-        <div class="p-t-20">
-            <button class="btn btn--radius btn--green" type="submit">Zaloguj</button>
-        </div>
-        </form>
-        </form>
 
     </div>
 </div>
@@ -75,3 +96,5 @@
 
 </html>
 <!-- end document-->
+
+
